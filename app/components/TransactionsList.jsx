@@ -8,26 +8,35 @@ class TransactionsList extends React.Component {
     super(props); // TotalIncome, List
   }
 
+  renderList(type){
+    const {list, totalIncome} = this.props;
+    return list.map(function (item) {
+      if (item.type === type){
+        return type === "income" ?
+          <IncomeItem {...item} key={item.id}></IncomeItem> :
+          <ExpenseItem {...item} key={item.id} totalIncome={totalIncome}></ExpenseItem>
+      } else {
+        return null;
+      }
+    });
+  }
+
   render(){
     return(
       <div className="container clearfix">
 
           <div className="income">
               <h2 className="icome__title">Income</h2>
-
               <div className="income__list">
-                <IncomeItem description="Maaş" value="7000"></IncomeItem>
+                {this.renderList("income")}
               </div>
-
           </div>
 
           <div className="expenses">
               <h2 className="expenses__title">Expenses</h2>
-
               <div className="expenses__list">
-                <ExpenseItem description="Kira" value="1000" totalIncome="10000"></ExpenseItem>
+                {this.renderList("expense")}
               </div>
-
           </div>
 
       </div>

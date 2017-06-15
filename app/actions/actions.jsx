@@ -105,13 +105,58 @@ const startGetTodos = () => {
   }
 }
 
-module.exports = {
-  setSearchText : setSearchText,
-  addTodo : addTodo,
-  updateTodo : updateTodo,
-  toggleShowCompleted : toggleShowCompleted,
-  startAddtodo : startAddtodo,
-  startToggleTodo : startToggleTodo,
-  startGetTodos : startGetTodos,
-  addTodos : addTodos
+export const addTransaction = (trType, description, value ) => {
+  return {
+    type : "ADD_TRANSACTION",
+    trType : trType,
+    value : value,
+    description : description
+  }
+}
+
+export const removeTransaction = (id) => {
+  return {
+    type : "REMOVE_TRANSACTION",
+    id : id
+  }
+}
+
+export const addTransactions = (transactions) => {
+  return {
+    type : "ADD_TRANSACTIONS",
+    transactions : transactions
+  }
+}
+
+export const setMonth = (month) => {
+  return {
+    type : "SET_MONTH",
+    month : month
+  }
+}
+
+export const setYear = (year) => {
+  return {
+    type : "SET_YEAR",
+    year : year
+  }
+}
+
+
+export const startGetTransactions = (month, year) => {
+  return (dispatch, getState) => {
+
+  }
+}
+
+export const startAddTransaction = (type, value, description) => {
+  return (dispatch, getState) => {
+
+  }
+}
+
+export const startDeleteTransaction = (id) => {
+  return (dispatch, getState) => {
+
+  }
 }

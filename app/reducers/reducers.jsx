@@ -4,21 +4,51 @@ const ActionTypes = require('../actions/actionTypes.js');
 const uuid = require('node-uuid');
 const moment = require('moment');
 
-let searchTextReducer = (searchText = '', action) => {
-  switch (action.type) {
-    case ActionTypes.SET_SEARCH_TEXT:
-      return action.searchText;
-    default:
-      return searchText;
-  }
+const d = new Date();
+
+const defaultState = {
+  list : [],
+  month : d.getMonth(),
+  year : d.getFullYear()
 }
 
-let showCompletedReducer = (showCompleted = false, action) => {
+export const reducer = (state = defaultState, action) => {
   switch (action.type) {
-    case ActionTypes.TOGGLE_SHOW_COMPLETED:
-      return !showCompleted;
+    case "SET_MONTH":
+      return {
+        ...state,
+        month : action.month
+      }
+    case "SET_YEAR":
+      return {
+        ...state,
+        year : action.year
+      }
+    case "ADD_TRANSACTION":
+      return {
+        ...state,
+        list : [
+          ...state.list,
+          {
+            id : uuid(),
+            type : action.trType,
+            description : action.description,
+            value : action.value
+          }
+        ]
+      }
+    case "ADD_TRANSACTIONS":
+        return {
+          ...state,
+          list : [...action.transactions]
+        }
+    case "REMOVE_TRANSACTION":
+      return {
+        ...state,
+        list : state.list.filter(item => item.id != action.id )
+      }
     default:
-      return showCompleted;
+      return state;
   }
 }
 
@@ -47,10 +77,4 @@ let todosReducer = (todos = [], action) => {
     default:
       return todos;
   }
-}
-
-module.exports = {
-  searchTextReducer: searchTextReducer,
-  showCompletedReducer: showCompletedReducer,
-  todosReducer: todosReducer
 }

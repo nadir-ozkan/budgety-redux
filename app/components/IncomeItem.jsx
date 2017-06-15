@@ -6,9 +6,9 @@ class IncomeItem extends React.Component {
   }
 
   render(){
-    const {description, value} = this.props;
+    const {description, value, id} = this.props;
     return(
-      <div className="item clearfix" id="income-0">
+      <div className="item clearfix" id={id} >
           <div className="item__description">{description}</div>
           <div className="right clearfix">
               <div className="item__value">+ {value}</div>

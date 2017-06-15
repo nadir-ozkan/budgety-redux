@@ -6,12 +6,12 @@ class Expense extends React.Component {
   }
 
   render(){
-    const {description, value, totalIncome} = this.props;
+    const {description, value, totalIncome, id} = this.props;
     const calculatePercentage = () => {
       return Math.round((parseFloat(value) / parseFloat(totalIncome))*100);
     }
     return(
-      <div className="item clearfix" id="expense-0">
+      <div className="item clearfix" id={id}>
           <div className="item__description">{description}</div>
           <div className="right clearfix">
               <div className="item__value">- {value}</div>
