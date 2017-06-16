@@ -8,11 +8,11 @@ const power = function (base, exponent) {
   return result;
 }
 
-// console.log(power(2,3));
-// console.log(power(3,2));
-// console.log(power(5,5));
-// console.log(power(3,4));
-// console.log(power(10,3));
+console.log(power(2,3));
+console.log(power(3,2));
+console.log(power(5,5));
+console.log(power(3,4));
+console.log(power(10,3));
 
 const powerR = function(base, exponent){
   if (exponent == 1)
@@ -21,11 +21,11 @@ const powerR = function(base, exponent){
     return base * powerR(base, exponent -1);
 }
 
-// console.log(powerR(2,3));
-// console.log(powerR(3,2));
-// console.log(powerR(5,5));
-// console.log(powerR(3,4));
-// console.log(powerR(10,3));
+console.log(powerR(2,3));
+console.log(powerR(3,2));
+console.log(powerR(5,5));
+console.log(powerR(3,4));
+console.log(powerR(10,3));
 
 console.log(power(2,3) == powerR(2,3));
 
