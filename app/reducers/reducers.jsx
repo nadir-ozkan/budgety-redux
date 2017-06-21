@@ -29,12 +29,7 @@ export const reducer = (state = defaultState, action) => {
         ...state,
         list : [
           ...state.list,
-          {
-            id : uuid(),
-            type : action.trType,
-            description : action.description,
-            value : action.value
-          }
+          action.transaction
         ]
       }
     case "ADD_TRANSACTIONS":

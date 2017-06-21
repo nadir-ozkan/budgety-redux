@@ -107,67 +107,82 @@ const startGetTodos = () => {
   }
 }
 
-export const addTransaction = (trType, description, value ) => {
+const _addTransaction = (transaction ) => {
   return {
     type : "ADD_TRANSACTION",
-    trType : trType,
-    value : value,
-    description : description
+    transaction : transaction
   }
 }
 
-export const removeTransaction = (id) => {
-  return {
-    type : "REMOVE_TRANSACTION",
-    id : id
-  }
-}
-
-export const addTransactions = (transactions) => {
+const _addTransactions = (transactions) => {
   return {
     type : "ADD_TRANSACTIONS",
     transactions : transactions
   }
 }
 
-export const setMonth = (month) => {
+const _removeTransaction = (id) => {
   return {
-    type : "SET_MONTH",
-    month : month
+    type : "REMOVE_TRANSACTION",
+    id : id
   }
 }
 
-export const setYear = (year) => {
-  return {
-    type : "SET_YEAR",
-    year : year
-  }
-}
+module.exports = {
+  addTransaction : _addTransaction,
+  removeTransaction : _removeTransaction,
+  addTransactions : _addTransactions,
+  setMonth : (month) => {
+    return {
+      type : "SET_MONTH",
+      month : month
+    }
+  },
+  setYear : (year) => {
+    return {
+      type : "SET_YEAR",
+      year : year
+    }
+  },
+  startGetTransactions : (month, year) => {
+    return (dispatch, getState) => {
+      const trRef = fbRef.child("transactions");
 
+      trRef.once("value").then((snapshot) => {
+        const transactions = snapshot.val() || {};
+        let parsedTransactions = [];
 
-export const startGetTransactions = (month, year) => {
-  return (dispatch, getState) => {
+        Object.keys(transactions).forEach((id)=> {
+          parsedTransactions.push({
+            id : id,
+            ...transactions[id]
+          });
+        });
 
-  }
-}
-
-export const startAddTransaction = (trType, description, value) => {
-  return (dispatch, getState) => {
-    const trRef = fbRef.child("transactions").push(
-      // id null olarak geçince Firebase veri tabanında id alanı hiç oluşmasyacak!
-      Transaction(trType, description, value, null);
-    );
-
-    trRef.then(function() {
-      dispatch(actions.addTransaction(
-        Transaction(trType, description, value, trRef.key));
+        dispatch(_addTransactions(parsedTransactions));
+      });
+    }
+  },
+  startAddTransaction : (trType, description, value) => {
+    return (dispatch, getState) => {
+      const trRef = fbRef.child("transactions").push(
+        Transaction(trType, description, parseFloat(value), null) // id null olarak geçince Firebase veri tabanında id alanı hiç oluşmasyacak!
       );
-    });
-  }
-}
 
-export const startDeleteTransaction = (id) => {
-  return (dispatch, getState) => {
-
+      trRef.then(function() {
+        dispatch(_addTransaction(
+            Transaction(trType, description, parseFloat(value), trRef.key)
+          )
+        );
+      });
+    }
+  },
+  startDeleteTransaction : (id) => {
+    return (dispatch, getState) => {
+      const trRef = fbRef.child("transactions/"+ id).remove();
+      trRef.then(()=> {
+        dispatch(_removeTransaction(id));
+      });
+    }
   }
 }

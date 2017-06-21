@@ -11,12 +11,13 @@ class AppHeader extends React.Component {
   render(){
     const {month, year, totalIncome, totalExpense} = this.props;
     const calculatePercentage = () => {
-      return Math.round(parseFloat(totalExpense) / parseFloat(totalIncome) * 100);
+      if (totalIncome === 0) return "---";
+      return Math.round(parseFloat(totalExpense) / parseFloat(totalIncome) * 100) + "%";
     }
     const calculateBalance = () => {
       const balance = totalIncome - totalExpense;
       const sign = balance > 0 ? "+" : balance < 0 ? "-"  : " ";
-      return sign + " " + balance.toString();
+      return sign + " " + Math.abs(balance).toString();
     }
     return(
       <div className="top">
@@ -39,7 +40,7 @@ class AppHeader extends React.Component {
                   <div className="budget__expenses--text">Expenses</div>
                   <div className="right clearfix">
                       <div className="budget__expenses--value">- {totalExpense} </div>
-                      <div className="budget__expenses--percentage">{calculatePercentage()}%</div>
+                      <div className="budget__expenses--percentage">{calculatePercentage()}</div>
                   </div>
               </div>
           </div>
