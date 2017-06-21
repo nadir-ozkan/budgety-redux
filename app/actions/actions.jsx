@@ -5,6 +5,8 @@ import firebase, {fbRef} from '../firebase/index.js';
 
 const moment = require('moment');
 
+import Transaction from '../models/Transaction.js';
+
 // asyncAction boilerplate : This type of function returning action should be used
 // when an action couses an asynchorous operation such as db call, with react-thunk middleware of course.
 
@@ -149,9 +151,18 @@ export const startGetTransactions = (month, year) => {
   }
 }
 
-export const startAddTransaction = (type, value, description) => {
+export const startAddTransaction = (trType, description, value) => {
   return (dispatch, getState) => {
+    const trRef = fbRef.child("transactions").push(
+      // id null olarak geçince Firebase veri tabanında id alanı hiç oluşmasyacak!
+      Transaction(trType, description, value, null);
+    );
 
+    trRef.then(function() {
+      dispatch(actions.addTransaction(
+        Transaction(trType, description, value, trRef.key));
+      );
+    });
   }
 }
 
