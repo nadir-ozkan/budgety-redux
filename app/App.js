@@ -29,6 +29,9 @@ store.dispatch(actions.addTransactions( [
 store.dispatch(actions.addTransaction("income", "Maaş2", 10000));
 store.dispatch(actions.removeTransaction("2"));
 
+store.dispatch(actions.setMonth(9));
+store.dispatch(actions.setYear(1888));
+
 render(
   <Provider store = {store}>
     <Router history={hashHistory}>

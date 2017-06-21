@@ -1,11 +1,12 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
 import IncomeItem from './IncomeItem.jsx';
 import ExpenseItem from './ExpenseItem.jsx';
 
 class TransactionsList extends React.Component {
   constructor(props) {
-    super(props); // TotalIncome, List
+    super(props); // TotalIncome
   }
 
   renderList(type){
@@ -44,4 +45,11 @@ class TransactionsList extends React.Component {
   }
 }
 
-export default TransactionsList;
+// Maps state from store to props
+const mapStateToProps = (state, ownProps) => {
+  return {
+    list: state.list,
+  }
+};
+
+export default connect(mapStateToProps)(TransactionsList);

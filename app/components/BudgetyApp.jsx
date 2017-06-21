@@ -34,10 +34,10 @@ class BudgetyApp extends React.Component {
     const totalIncome = this.calculateTotal("income");
     return(
       <div>
-        <AppHeader month="Haziran" year="2017" totalIncome = {totalIncome} totalExpense ={this.calculateTotal("expense")}></AppHeader>
+        <AppHeader totalIncome = {totalIncome} totalExpense ={this.calculateTotal("expense")}></AppHeader>
         <div className="bottom">
             <AddTransaction></AddTransaction>
-            <TransactionsList list={this.list} totalIncome = {totalIncome}></TransactionsList>
+            <TransactionsList totalIncome = {totalIncome}></TransactionsList>
         </div>
       </div>
     );

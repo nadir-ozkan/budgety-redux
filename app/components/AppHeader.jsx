@@ -1,8 +1,11 @@
 import React from 'react';
+import {connect} from 'react-redux';
+
+import Utils from './Utils.js';
 
 class AppHeader extends React.Component {
   constructor(props) {
-    super(props); // month, year, income, expense
+    super(props); // income, expense
   }
 
   render(){
@@ -19,7 +22,7 @@ class AppHeader extends React.Component {
       <div className="top">
           <div className="budget">
               <div className="budget__title">
-                  Available Budget in <span className="budget__title--month">{month + " " +year}</span>:
+                  Available Budget in <span className="budget__title--month">{Utils.date.getMonthName(month) + " " +year}</span>
               </div>
 
               <div className="budget__value">{calculateBalance()}</div>
@@ -45,4 +48,12 @@ class AppHeader extends React.Component {
   }
 }
 
-export default AppHeader;
+// Maps state from store to props
+const mapStateToProps = (state, ownProps) => {
+  return {
+    month: state.month,
+    year : state.year
+  }
+};
+
+export default connect(mapStateToProps)(AppHeader);
