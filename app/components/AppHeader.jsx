@@ -2,10 +2,26 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import Utils from './Utils.js';
+import actions from '../actions/actions.jsx';
+
+import LoginPage from './LoginPage.jsx';
+import Credits from './Credits.jsx';
 
 class AppHeader extends React.Component {
   constructor(props) {
     super(props); // income, expense
+  }
+
+  showCredits(e){
+    e.preventDefault();
+    const {dispatch} = this.props;
+    dispatch(actions.showModal("Credits","Coded by Nadir Özkan",<Credits></Credits>));
+  }
+
+  showLoginPage(e){
+    e.preventDefault();
+    const {dispatch} = this.props;
+    dispatch(actions.showModal("Credits","Coded by Nadir Özkan",<LoginPage></LoginPage>));
   }
 
   render(){
@@ -21,6 +37,10 @@ class AppHeader extends React.Component {
     }
     return(
       <div className="top">
+          <div id="top-bar">
+            <a id="rulesAndCredits" href="#" onClick={this.showCredits.bind(this)}>Rules & Credits</a>
+            <a id="loginLink" href="#" onClick={this.showLoginPage.bind(this)}>Login</a>
+          </div>
           <div className="budget">
               <div className="budget__title">
                   Available Budget in <span className="budget__title--month">{Utils.date.getMonthName(month) + " " +year}</span>
@@ -53,7 +73,7 @@ class AppHeader extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     month: state.month,
-    year : state.year
+    year : state.year,
   }
 };
 

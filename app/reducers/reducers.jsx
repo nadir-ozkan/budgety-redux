@@ -9,7 +9,13 @@ const d = new Date();
 const defaultState = {
   list : [],
   month : d.getMonth(),
-  year : d.getFullYear()
+  year : d.getFullYear(),
+  modalDialogInfo : {
+    headerText : "",
+    footerText : "",
+    content : null,
+    isShowing : false
+  }
 }
 
 export const reducer = (state = defaultState, action) => {
@@ -41,6 +47,16 @@ export const reducer = (state = defaultState, action) => {
       return {
         ...state,
         list : state.list.filter(item => item.id != action.id )
+      }
+    case "SHOW_MODAL":
+      return {
+        ...state,
+        modalDialogInfo : action.modalDialogInfo
+      }
+    case "HIDE_MODAL":
+      return {
+        ...state,
+        modalDialogInfo : action.modalDialogInfo
       }
     default:
       return state;

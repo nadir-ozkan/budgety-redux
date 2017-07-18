@@ -128,6 +128,30 @@ const _removeTransaction = (id) => {
   }
 }
 
+const showModal = (headerText, footerText, content) => {
+  return {
+    type : ActionTypes.SHOW_MODAL,
+    modalDialogInfo : {
+      headerText : headerText,
+      footerText : footerText,
+      content : content,
+      isShowing : true
+    }
+  }
+}
+
+const hideModal = ()=> {
+  return {
+    type : ActionTypes.HIDE_MODAL,
+    modalDialogInfo : {
+      headerText : "",
+      footerText : "",
+      content : null,
+      isShowing : false
+    }
+  }
+}
+
 module.exports = {
   addTransaction : _addTransaction,
   removeTransaction : _removeTransaction,
@@ -184,5 +208,7 @@ module.exports = {
         dispatch(_removeTransaction(id));
       });
     }
-  }
+  },
+  showModal : showModal,
+  hideModal : hideModal
 }

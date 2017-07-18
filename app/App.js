@@ -14,7 +14,7 @@ const store = require('./store/configureStore.jsx').configure();
 import Transaction from './models/Transaction.js';
 // import './poc/firebase/index.js'; //  Bu kod satırı firebase denemelerini çalıştırır.
 
-import './poc/eloquentJs/higherOrder.js'; 
+//import './poc/eloquentJs/higherOrder.js'; 
 
 
 store.subscribe(() => {
