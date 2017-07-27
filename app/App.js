@@ -12,10 +12,19 @@ const actions = require('./actions/actions.jsx');
 const store = require('./store/configureStore.jsx').configure();
 
 import Transaction from './models/Transaction.js';
+import firebase from './firebase/index.js';
+
 // import './poc/firebase/index.js'; //  Bu kod satırı firebase denemelerini çalıştırır.
 
-//import './poc/eloquentJs/higherOrder.js'; 
+//import './poc/eloquentJs/higherOrder.js';
 
+firebase.auth().onAuthStateChanged((user)=>{
+  if (user) { // there is a logged in user
+    console.log("User logged in. ", user);
+  } else {// user logged out.
+    console.log("User logged out.");
+  }
+});
 
 store.subscribe(() => {
   //console.log(store.getState());
@@ -23,6 +32,8 @@ store.subscribe(() => {
 
 // İleride ay ve yıla göre ilgili işlem listesi getirilebilecek.
 store.dispatch(actions.startGetTransactions(5,2011));
+
+
 
 render(
   <Provider store = {store}>
