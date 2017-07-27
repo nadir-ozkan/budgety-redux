@@ -19,5 +19,6 @@ var _getFirebaseRef = function _getFirebaseRef() {
   return _fbRef;
 }
 
+export const githubProvider = new firebase.auth.GithubAuthProvider();
 export const fbRef = _getFirebaseRef();
 export default firebase;

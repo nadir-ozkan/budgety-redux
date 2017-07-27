@@ -1,7 +1,9 @@
 "use strict";
 
+import React from 'react';
+
 const ActionTypes = require('./actionTypes');
-import firebase, {fbRef} from '../firebase/index.js';
+import firebase, {fbRef, githubProvider} from '../firebase/index.js';
 
 const moment = require('moment');
 
@@ -140,7 +142,7 @@ const showModal = (headerText, footerText, content) => {
   }
 }
 
-const hideModal = ()=> {
+const hideModal = () => {
   return {
     type : ActionTypes.HIDE_MODAL,
     modalDialogInfo : {
@@ -149,6 +151,35 @@ const hideModal = ()=> {
       content : null,
       isShowing : false
     }
+  }
+}
+
+const setUser = (user) => {
+  return {
+    type : "SET_USER",
+    user : user
+  }
+}
+
+const startLogin = () => {
+  return (dispatch, getState) => {
+    return firebase.auth().signInWithPopup(githubProvider).then((result) => {
+      console.log("Auth başarılı", result);
+      dispatch(setUser("Nadir Özkan"));
+    }, (err) => {
+      console.log("Auth gerçekleşmedi", err);
+      dispatch(setUser("test"));
+    });
+  }
+}
+
+const startLogout = () => {
+  return (dispatch, getState) => {
+    return firebase.auth().signOut().then(()=>{
+      console.log("User signed out!")
+      dispatch(setUser("test"));
+      dispatch(showModal("Sing Out","BudgetyApp", <h2>User Signed Out!</h2>));
+    });
   }
 }
 
@@ -168,9 +199,15 @@ module.exports = {
       year : year
     }
   },
+  setUser : setUser,
   startGetTransactions : (month, year) => {
     return (dispatch, getState) => {
-      const trRef = fbRef.child("transactions");
+      const user = getState().user;
+      if (!user) {
+        return;
+      }
+
+      const trRef = fbRef.child("users/" + user + "/transactions");
 
       trRef.once("value").then((snapshot) => {
         const transactions = snapshot.val() || {};
@@ -189,7 +226,11 @@ module.exports = {
   },
   startAddTransaction : (trType, description, value) => {
     return (dispatch, getState) => {
-      const trRef = fbRef.child("transactions").push(
+      const user = getState().user;
+      if (!user) {
+        return;
+      }
+      const trRef = fbRef.child("users/" + user + "/transactions").push(
         Transaction(trType, description, parseFloat(value), null) // id null olarak geçince Firebase veri tabanında id alanı hiç oluşmasyacak!
       );
 
@@ -203,12 +244,18 @@ module.exports = {
   },
   startDeleteTransaction : (id) => {
     return (dispatch, getState) => {
-      const trRef = fbRef.child("transactions/"+ id).remove();
+      const user = getState().user;
+      if (!user) {
+        return;
+      }
+      const trRef = fbRef.child("users/" + user + "/transactions/"+ id).remove();
       trRef.then(()=> {
         dispatch(_removeTransaction(id));
       });
     }
   },
   showModal : showModal,
-  hideModal : hideModal
+  hideModal : hideModal,
+  startLogin : startLogin,
+  startLogout : startLogout
 }

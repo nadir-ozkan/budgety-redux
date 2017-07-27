@@ -20,8 +20,22 @@ class AppHeader extends React.Component {
 
   showLoginPage(e){
     e.preventDefault();
+    const anchorText = e.target.textContent;
     const {dispatch} = this.props;
-    dispatch(actions.showModal("Credits","Coded by Nadir Özkan",<LoginPage></LoginPage>));
+    if (anchorText == "Login") {
+      dispatch(actions.startLogin());
+    } else {
+      dispatch(actions.startLogout());
+    }
+  }
+
+  getLoginWord(){
+    const {user} = this.props;
+    if (user && user == "test"){
+      return "Login";
+    } else {
+      return "Logout";
+    }
   }
 
   render(){
@@ -39,7 +53,7 @@ class AppHeader extends React.Component {
       <div className="top">
           <div id="top-bar">
             <a id="rulesAndCredits" href="#" onClick={this.showCredits.bind(this)}>Rules & Credits</a>
-            <a id="loginLink" href="#" onClick={this.showLoginPage.bind(this)}>Login</a>
+            <a id="loginLink" href="#" onClick={this.showLoginPage.bind(this)}>{this.getLoginWord()}</a>
           </div>
           <div className="budget">
               <div className="budget__title">
@@ -74,6 +88,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     month: state.month,
     year : state.year,
+    user : state.user
   }
 };
 

@@ -15,7 +15,8 @@ const defaultState = {
     footerText : "",
     content : null,
     isShowing : false
-  }
+  },
+  user : "test"
 }
 
 export const reducer = (state = defaultState, action) => {
@@ -57,6 +58,11 @@ export const reducer = (state = defaultState, action) => {
       return {
         ...state,
         modalDialogInfo : action.modalDialogInfo
+      }
+    case "SET_USER":
+      return {
+        ...state,
+        user : action.user
       }
     default:
       return state;
