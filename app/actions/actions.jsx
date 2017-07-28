@@ -183,6 +183,32 @@ const startLogout = () => {
   }
 }
 
+const startGetTransactions = (month, year) => {
+  return (dispatch, getState) => {
+    const user = getState().user;
+    if (!user) {
+      return;
+    }
+
+    month = month || getState().month;
+    year = year || getState().year;
+
+    const trRef = fbRef.child("users/" + user + "/transactions");
+
+    trRef.once("value").then((snapshot) => {
+      const transactions = snapshot.val() || {};
+      let parsedTransactions = [];
+
+      Object.keys(transactions).forEach((id)=> {
+        parsedTransactions.push({
+          id : id,
+          ...transactions[id]
+        });
+      });
+      dispatch(_addTransactions(parsedTransactions));
+    });
+}
+
 module.exports = {
   addTransaction : _addTransaction,
   removeTransaction : _removeTransaction,
@@ -200,30 +226,7 @@ module.exports = {
     }
   },
   setUser : setUser,
-  startGetTransactions : (month, year) => {
-    return (dispatch, getState) => {
-      const user = getState().user;
-      if (!user) {
-        return;
-      }
-
-      const trRef = fbRef.child("users/" + user + "/transactions");
-
-      trRef.once("value").then((snapshot) => {
-        const transactions = snapshot.val() || {};
-        let parsedTransactions = [];
-
-        Object.keys(transactions).forEach((id)=> {
-          parsedTransactions.push({
-            id : id,
-            ...transactions[id]
-          });
-        });
-
-        dispatch(_addTransactions(parsedTransactions));
-      });
-    }
-  },
+  startGetTransactions : startGetTransactions,
   startAddTransaction : (trType, description, value) => {
     return (dispatch, getState) => {
       const user = getState().user;

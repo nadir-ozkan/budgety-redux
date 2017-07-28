@@ -24,6 +24,7 @@ firebase.auth().onAuthStateChanged((user)=>{
   } else {// user logged out.
     console.log("User logged out.");
   }
+  store.dispatch(actions.startGetTransactions());
 });
 
 store.subscribe(() => {
@@ -31,8 +32,7 @@ store.subscribe(() => {
 });
 
 // İleride ay ve yıla göre ilgili işlem listesi getirilebilecek.
-store.dispatch(actions.startGetTransactions(5,2011));
-
+store.dispatch(actions.startGetTransactions());
 
 
 render(
