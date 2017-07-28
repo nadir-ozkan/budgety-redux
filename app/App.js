@@ -18,22 +18,35 @@ import firebase from './firebase/index.js';
 
 //import './poc/eloquentJs/higherOrder.js';
 
+const updateUser = (user) => {
+  return new Promise(function(resolve, reject) {
+    store.dispatch(actions.setUser(user));
+    setTimeout(function () {
+      resolve(user);
+    },1);
+  });
+}
+
 firebase.auth().onAuthStateChanged((user)=>{
   if (user) { // there is a logged in user
     console.log("User logged in. ", user);
+    updateUser(user.uid)
+      .then((user)=> {
+        store.dispatch(actions.startGetTransactions());
+      });
   } else {// user logged out.
     console.log("User logged out.");
+    updateUser("test")
+      .then((user)=> {
+        store.dispatch(actions.startGetTransactions());
+      });
   }
-  store.dispatch(actions.startGetTransactions());
+
 });
 
 store.subscribe(() => {
   //console.log(store.getState());
 });
-
-// İleride ay ve yıla göre ilgili işlem listesi getirilebilecek.
-store.dispatch(actions.startGetTransactions());
-
 
 render(
   <Provider store = {store}>

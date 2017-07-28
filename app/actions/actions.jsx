@@ -165,10 +165,8 @@ const startLogin = () => {
   return (dispatch, getState) => {
     return firebase.auth().signInWithPopup(githubProvider).then((result) => {
       console.log("Auth başarılı", result);
-      dispatch(setUser("Nadir Özkan"));
     }, (err) => {
       console.log("Auth gerçekleşmedi", err);
-      dispatch(setUser("test"));
     });
   }
 }
@@ -207,6 +205,7 @@ const startGetTransactions = (month, year) => {
       });
       dispatch(_addTransactions(parsedTransactions));
     });
+  }
 }
 
 module.exports = {
