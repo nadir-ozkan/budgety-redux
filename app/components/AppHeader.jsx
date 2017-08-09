@@ -6,6 +6,7 @@ import actions from '../actions/actions.jsx';
 
 import LoginPage from './LoginPage.jsx';
 import Credits from './Credits.jsx';
+import PeriodList from './PeriodList.jsx';
 
 class AppHeader extends React.Component {
   constructor(props) {
@@ -27,6 +28,17 @@ class AppHeader extends React.Component {
     } else {
       dispatch(actions.startLogout());
     }
+  }
+
+  showPeriodList(e){
+    e.preventDefault();
+    const {dispatch} = this.props;
+    dispatch(actions.showModal("Period List", "Chose a period to show transactions.",
+                                <PeriodList
+                                  dispatch={this.props.dispatch}
+                                  periodList = {this.props.periodList}
+                                >
+                                </PeriodList>));
   }
 
   getLoginWord(){
@@ -57,7 +69,12 @@ class AppHeader extends React.Component {
           </div>
           <div className="budget">
               <div className="budget__title">
-                  Available Budget in <span className="budget__title--month">{Utils.date.getMonthName(month) + " " +year}</span>
+                  Available Budget in <span
+                    className="budget__title--month"
+                    onClick= {this.showPeriodList.bind(this)}
+                    >
+                    {Utils.date.getMonthName(month) + " " +year}
+                  </span>
               </div>
 
               <div className="budget__value">{calculateBalance()}</div>
@@ -88,7 +105,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     month: state.month,
     year : state.year,
-    user : state.user
+    user : state.user,
+    periodList : state.periodList
   }
 };
 

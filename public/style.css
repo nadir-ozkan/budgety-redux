@@ -55,6 +55,11 @@ body {
     font-weight: 300;
 }
 
+.budget__title--month{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .budget__value {
     font-weight: 300;
     font-size: 46px;
