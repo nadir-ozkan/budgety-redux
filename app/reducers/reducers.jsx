@@ -16,7 +16,8 @@ const defaultState = {
     content : null,
     isShowing : false
   },
-  user : "test"
+  user : "test",
+  periodList : []
 }
 
 export const reducer = (state = defaultState, action) => {
@@ -63,6 +64,11 @@ export const reducer = (state = defaultState, action) => {
       return {
         ...state,
         user : action.user
+      }
+    case "SET_PERIOD_LIST":
+      return {
+        ...state,
+        periodList : action.periodList
       }
     default:
       return state;

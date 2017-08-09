@@ -181,17 +181,36 @@ const startLogout = () => {
   }
 }
 
+const setMonth = (month) => {
+  return {
+    type : "SET_MONTH",
+    month : month
+  }
+}
+
+const setYear = (year) => {
+  return {
+    type : "SET_YEAR",
+    year : year
+  }
+}
+
+const toPeriod = (month, year) => {
+  return (month+1).toString() + "_" + (year).toString();
+}
+
 const startGetTransactions = (month, year) => {
   return (dispatch, getState) => {
     const user = getState().user;
-    if (!user) {
-      return;
-    }
+    if (!user) { return; }
 
     month = month || getState().month;
     year = year || getState().year;
 
-    const trRef = fbRef.child("users/" + user + "/transactions");
+    dispatch(setMonth(month));
+    dispatch(setYear(year));
+
+    const trRef = fbRef.child("users/" + user + "/transactions/" + toPeriod(month, year));
 
     trRef.once("value").then((snapshot) => {
       const transactions = snapshot.val() || {};
@@ -205,6 +224,50 @@ const startGetTransactions = (month, year) => {
       });
       dispatch(_addTransactions(parsedTransactions));
     });
+
+    getPeriodList(user).then((periodsList)=>{
+      if (periodsList){
+        const currentPeriod = toPeriod(month, year);
+        if (periodsList.indexOf(currentPeriod) === -1){
+          addToPeriodList(user, currentPeriod).then(()=>{
+            getPeriodList(user).then((periodsList)=>{
+              dispatch(setPeriodList(periodsList));
+            });
+          });
+        } else {
+          dispatch(setPeriodList(periodsList));
+        }
+      }
+
+    });
+
+  }
+}
+
+const addToPeriodList = (user, period) => {
+  return fbRef.child("users/" + user + "/metaData/periodList").push(period);
+}
+
+const getPeriodList = (user) => {
+  return new Promise(function(resolve, reject) {
+    const trRef = fbRef.child("users/" + user + "/metaData/periodList");
+    trRef.once("value").then((snapshot) => {
+        const periods = snapshot.val() || {};
+        const periodsArray = Object.keys(periods).reduce((list, id)=>{
+          list.push(periods[id]);
+          return list;
+        },[]);
+        console.log(periodsArray);
+        resolve(periodsArray);
+      }
+    );
+  });
+}
+
+const setPeriodList = (periodList) => {
+  return {
+    type : "SET_PERIOD_LIST",
+    periodList : periodList
   }
 }
 
@@ -212,18 +275,8 @@ module.exports = {
   addTransaction : _addTransaction,
   removeTransaction : _removeTransaction,
   addTransactions : _addTransactions,
-  setMonth : (month) => {
-    return {
-      type : "SET_MONTH",
-      month : month
-    }
-  },
-  setYear : (year) => {
-    return {
-      type : "SET_YEAR",
-      year : year
-    }
-  },
+  setMonth : setMonth,
+  setYear : setYear,
   setUser : setUser,
   startGetTransactions : startGetTransactions,
   startAddTransaction : (trType, description, value) => {
@@ -232,7 +285,8 @@ module.exports = {
       if (!user) {
         return;
       }
-      const trRef = fbRef.child("users/" + user + "/transactions").push(
+
+      const trRef = fbRef.child("users/" + user + "/transactions/" + toPeriod(getState().month, getState().year)).push(
         Transaction(trType, description, parseFloat(value), null) // id null olarak geçince Firebase veri tabanında id alanı hiç oluşmasyacak!
       );
 
@@ -250,7 +304,7 @@ module.exports = {
       if (!user) {
         return;
       }
-      const trRef = fbRef.child("users/" + user + "/transactions/"+ id).remove();
+      const trRef = fbRef.child("users/" + user + "/transactions/"+ toPeriod(getState().month, getState().year) + "/" + id).remove();
       trRef.then(()=> {
         dispatch(_removeTransaction(id));
       });
