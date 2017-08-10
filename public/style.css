@@ -298,6 +298,28 @@ h2 {
   height: 10px;
 }
 
+
+.period-list p {
+  height: 30px;
+  background-color: #b5b5b5;
+  text-align: center;
+  margin-left: 10%;
+  width: 80%;
+  cursor: pointer;
+  border-radius: 5px;
+  line-height: 30px;
+}
+
+.period-list p:first-of-type{
+  margin-top:5px;
+}
+
+.period-row:hover{
+  background-color: white;
+  background-color: #fff4f4;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+}
+
 /**********************************************
 *** Modal Dialog
 **********************************************/

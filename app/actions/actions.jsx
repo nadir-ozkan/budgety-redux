@@ -196,7 +196,7 @@ const setYear = (year) => {
 }
 
 const toPeriod = (month, year) => {
-  return (month+1).toString() + "_" + (year).toString();
+  return (parseInt(month,10) + 1).toString() + "_" + (parseInt(year,10)).toString();
 }
 
 const startGetTransactions = (month, year) => {
